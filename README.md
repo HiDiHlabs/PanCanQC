@@ -8,10 +8,10 @@ Installation
 
 First of all you need to have a running Docker installation.
 
-Download this tar.gz version of the QC Docker and unpack it.
+Then clone this repository.
 
 ```
-$ cd PanCanQCDocker_v0.1/
+$ cd PanCanQC/
 $ docker build -t "pcawg-qc" .
 ```
 
