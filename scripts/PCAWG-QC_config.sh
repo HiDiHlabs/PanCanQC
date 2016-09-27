@@ -33,6 +33,7 @@ TOOL_COMBINED_BAM_ANALYSIS=${scriptPath}/flags_isizes_PEaberrations.pl
 TOOL_COVERAGE_QC_D_IMPL=/home/pcawg/binaries/coverageQc
 TOOL_GENOME_COVERAGE_D_IMPL=/home/pcawg/binaries/genomeCoverage
 TOOL_FILTER_READ_BINS=${scriptPath}/filter_readbins.pl
+TOOL_MEDIAN_MEAN=${scriptPath}/median_mean.R
 
 # FILENAMES
 FILENAME_DIFFCHROM_STATISTICS=${localScratchDirectory}/diffchrom_file
@@ -51,3 +52,4 @@ MAPPABILITY_FILE=/home/pcawg/data/database_files/wgEncodeCrgMapabilityAlign100me
 CHROMOSOME_LENGTH_FILE=/home/pcawg/data/database_files/chrlengths.txt
 REPLICATION_TIME_FILE=/home/pcawg/data/database_files/ReplicationTime_10cellines_mean_10KB.Rda
 GC_CONTENT_FILE=/home/pcawg/data/database_files/hg19_GRch37_100genomes_gc_content_10kb.txt
+MEDIAN_MEAN_TARGET_FILE=/home/pcawg/data/database_files/HUMAN_hsapiens.hs37d5_reducedGenome.n300l5M.sorted.bed

@@ -258,12 +258,14 @@ DIFFCHROM_VALUE_CONTROL=`cat ${FILENAME_DIFFCHROM_STATISTICS}_CONTROL`
 COVERAGE_CONTROL=`grep "^all" ${FILENAME_GENOME_COVERAGE}_CONTROL | cut -f 16 | sed 's|x$||'`
 FWHM_CONTROL=`tail -n +2 ${corrected_table_slim_CONTROL} | cut -f 4`
 READ_EDITS_CONTROL=`perl -e 'use strict; use warnings; open(IN, "<$ARGV[0]"); my $r1 = 0, my $r2 = 0; while(<IN>){chomp; next if($_ =~ /^bam_filename/); my @l = split("\t", $_); $r1 += $l[12]; $r2 += $l[13];}my $res = 0; if($r1 > $r2){$res = $r1/$r2;}else{$res = $r2/$r1;}print $res, "\n";' ${localScratchDirectory}/read_edits_control.txt`
+MEDIAN_MEAN_CONTROL=`cat ${FILENAME_READBINS_COVERAGE}_CONTROL | perl -F"\t" -ae 'print join("\t", $F[0],$F[1],$F[1]+999,$F[2])' | intersectBed -a stdin -b ${MEDIAN_MEAN_TARGET_FILE} | Rscript ${TOOL_MEDIAN_MEAN}`
 
 # Tumor
 DIFFCHROM_VALUE_TUMOR=`cat ${FILENAME_DIFFCHROM_STATISTICS}_TUMOR`
 COVERAGE_TUMOR=`grep "^all" ${FILENAME_GENOME_COVERAGE}_TUMOR | cut -f 16 | sed 's|x$||'`
 FWHM_TUMOR=`tail -n +2 ${corrected_table_slim_TUMOR} | cut -f 4`
 READ_EDITS_TUMOR=`perl -e 'use strict; use warnings; open(IN, "<$ARGV[0]"); my $r1 = 0, my $r2 = 0; while(<IN>){chomp; next if($_ =~ /^bam_filename/); my @l = split("\t", $_); $r1 += $l[12]; $r2 += $l[13];}my $res = 0; if($r1 > $r2){$res = $r1/$r2;}else{$res = $r2/$r1;}print $res, "\n";' ${localScratchDirectory}/read_edits_tumor.txt`
+MEDIAN_MEAN_TUMOR=`cat ${FILENAME_READBINS_COVERAGE}_TUMOR | perl -F"\t" -ae 'print join("\t", $F[0],$F[1],$F[1]+999,$F[2])' | intersectBed -a stdin -b ${MEDIAN_MEAN_TARGET_FILE} | Rscript ${TOOL_MEDIAN_MEAN}`
 
 # Combine
-echo -e "Callable bases\t${CALLABLE_BASES}\nReads mapping on different chromosomes control\t${DIFFCHROM_VALUE_CONTROL}\nReads mapping on different chromosomes tumor\t${DIFFCHROM_VALUE_TUMOR}\nCoverage control\t${COVERAGE_CONTROL}\nCoverage tumor\t${COVERAGE_TUMOR}\nFWHM control\t${FWHM_CONTROL}\nFWHM tumor\t${FWHM_TUMOR}\nRead edits control\t${READ_EDITS_CONTROL}\nRead edits tumor\t${READ_EDITS_TUMOR}" > /home/pcawg/data/results/QC_results.tsv
+echo -e "Callable bases\t${CALLABLE_BASES}\nReads mapping on different chromosomes control\t${DIFFCHROM_VALUE_CONTROL}\nReads mapping on different chromosomes tumor\t${DIFFCHROM_VALUE_TUMOR}\nCoverage control\t${COVERAGE_CONTROL}\nCoverage tumor\t${COVERAGE_TUMOR}\nFWHM control\t${FWHM_CONTROL}\nFWHM tumor\t${FWHM_TUMOR}\nMedian over Mean control\t${MEDIAN_MEAN_CONTROL}\nMedian over Mean tumor\t${MEDIAN_MEAN_TUMOR}\nRead edits control\t${READ_EDITS_CONTROL}\nRead edits tumor\t${READ_EDITS_TUMOR}" > /home/pcawg/data/results/QC_results.tsv

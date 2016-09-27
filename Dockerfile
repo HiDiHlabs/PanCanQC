@@ -42,8 +42,7 @@ RUN \
     mkdir -p /home/pcawg
 
 RUN \
-    mkdir -p /home/pcawg/data/localScratchDirectory && \
-    mkdir /home/pcawg/data/bams && \
+    mkdir -p /home/pcawg/data/localScratchDirectory /home/pcawg/data/bams && \
     cd /home/pcawg/data/ && \
     wget https://powerfolder.dkfz.de/dl/fiJGFePRxoTVNk47XWbHYnXK/database_files.tar.gz && \
     tar -xf database_files.tar.gz && \
@@ -71,6 +70,10 @@ RUN \
     ln -s samtools/samtools /bin/ && \
     ln -s htslib/tabix /bin/ && \
     ln -s htslib/bgzip /bin/
+
+RUN \
+    apt-get -y install vim && \
+    apt-get -y install bedtools
 
 ADD binaries/ /home/pcawg/binaries
 
