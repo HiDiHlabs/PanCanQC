@@ -40,6 +40,7 @@ mkfifo ${NP_READBINS_IN_CONTROL} ${NP_COVERAGEQC_IN_CONTROL} ${NP_COMBINEDANALYS
 # Create tree of input files/named pipes for the merged bam file
 (cat ${tumor_bam} | tee ${NP_COVERAGEQC_IN_TUMOR} ${NP_READBINS_IN_TUMOR} ${NP_CALLABLE_BASES_TUMOR} ${NP_BAMSTATS_TUMOR} | ${SAMTOOLS_BINARY} view - > ${NP_COMBINEDANALYSIS_IN_TUMOR}) & procIDSAMpipe_TUMOR=$!
 sleep 1
+
 # SAM output is piped to perl script that calculates various QC measures
 (${PERL_BINARY} ${TOOL_COMBINED_BAM_ANALYSIS} -i ${NP_COMBINEDANALYSIS_IN_TUMOR} -c ${CHROM_SIZES_FILE} -o ${FILENAME_DIFFCHROM_STATISTICS}_TUMOR.tmp ) & procIDCBA_TUMOR=$!
 
@@ -49,8 +50,7 @@ sleep 1
 # this part often fails with broken pipe, ?? where this comes from. The mbuffer did not help, maybe --processors=4 does?
 (${TOOL_GENOME_COVERAGE_D_IMPL} --alignmentFile=${NP_READBINS_IN_TUMOR} --outputFile=/dev/stdout --processors=4 --mode=countReads --windowSize=${WINDOW_SIZE-1} | ${PERL_BINARY} ${TOOL_FILTER_READ_BINS} - ${CHROM_SIZES_FILE} > ${FILENAME_READBINS_COVERAGE}_TUMOR.tmp) & procIDReadbinsCoverage_TUMOR=$!
 
-# this is a new pipe for the read edits
-(bam_stats -i ${NP_BAMSTATS_TUMOR} -o ${localScratchDirectory}/read_edits_tumor.tmp) & procIDReadEdits_TUMOR=$!
+
 
 # Control
 # Create tree of input files/named pipes for the merged bam file
@@ -65,11 +65,17 @@ sleep 1
 # this part often fails with broken pipe, ?? where this comes from. The mbuffer did not help, maybe --processors=4 does?
 (${TOOL_GENOME_COVERAGE_D_IMPL} --alignmentFile=${NP_READBINS_IN_CONTROL} --outputFile=/dev/stdout --processors=4 --mode=countReads --windowSize=${WINDOW_SIZE} | ${PERL_BINARY} ${TOOL_FILTER_READ_BINS} - ${CHROM_SIZES_FILE} > ${FILENAME_READBINS_COVERAGE}_CONTROL.tmp) & procIDReadbinsCoverage_CONTROL=$!
 
-# this is a new pipe for the read edits
-(bam_stats -i ${NP_BAMSTATS_CONTROL} -o ${localScratchDirectory}/read_edits_control.tmp) & procIDReadEdits_CONTROL=$!
 
 # Determine callabel bases
 (${SAMTOOLS_BINARY} depth ${NP_CALLABLE_BASES_CONTROL} ${NP_CALLABLE_BASES_TUMOR} | awk '($3>14 && $4>8)' | wc -l > ${localScratchDirectory}/callable_bases.txt.tmp) & procIDCALBASE=$!
+
+sleep 2
+
+# this is a new pipe for the read edits
+(bam_stats -i ${NP_BAMSTATS_TUMOR} -o ${localScratchDirectory}/read_edits_tumor.tmp) & procIDReadEdits_TUMOR=$!
+
+# this is a new pipe for the read edits
+(bam_stats -i ${NP_BAMSTATS_CONTROL} -o ${localScratchDirectory}/read_edits_control.tmp) & procIDReadEdits_CONTROL=$!
 
 # Tumor
 # Some waits for parallel processes. This also depends on the used merge binary.
@@ -243,12 +249,6 @@ then
 fi	
 
 mv ${tmp_corrected_windowfile_CONTROL} ${FILENAME_GC_CORRECTED_WINDOWS}_CONTROL
-
-# mv ${FILENAME_DIFFCHROM_STATISTICS}_CONTROL.tmp ${FILENAME_DIFFCHROM_STATISTICS}_CONTROL
-# mv ${FILENAME_READBINS_COVERAGE}_CONTROL.tmp ${FILENAME_READBINS_COVERAGE}_CONTROL
-# mv ${FILENAME_GENOME_COVERAGE}_CONTROL.tmp ${FILENAME_GENOME_COVERAGE}_CONTROL
-# mv ${localScratchDirectory}/read_edits_control.tmp ${localScratchDirectory}/read_edits_control.txt
-# mv ${localScratchDirectory}/callable_bases.txt.tmp ${localScratchDirectory}/callable_bases.txt
 
 # Gather QC values and print results:
 CALLABLE_BASES=`cat ${localScratchDirectory}/callable_bases.txt`
