@@ -9,11 +9,11 @@ description: |
     ```
     Usage:
     # fetch CWL
-    dockstore tool cwl --entry quay.io/jwerner_dkfz/pancanqc:latest > Dockstore.cwl
+    dockstore tool cwl --entry quay.io/jwerner_dkfz/pancanqc:1.0 > Dockstore.cwl
     # make a runtime JSON template and edit it
     dockstore tool convert cwl2json --cwl Dockstore.cwl > Dockstore.json
     # run it locally with the Dockstore CLI
-    dockstore tool launch --entry quay.io/jwerner_dkfz/pancanqc:latest --json Dockstore.json
+    dockstore tool launch --entry quay.io/jwerner_dkfz/pancanqc:1.0 --json Dockstore.json
     ```
 
 dct:creator:
@@ -22,8 +22,7 @@ dct:creator:
 
 requirements:
   - class: DockerRequirement
-    # dockerPull: "quay.io/jwerner_dkfz/pancanqc:latest"
-    dockerPull: "wernerjo/pancanqc"
+    dockerPull: "quay.io/jwerner_dkfz/pancanqc:latest:1.0"
   - class: InlineJavascriptRequirement
   - class: InitialWorkDirRequirement
     listing:
