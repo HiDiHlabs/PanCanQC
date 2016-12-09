@@ -9,8 +9,8 @@ source /home/pcawg/data/scripts/PCAWG-QC_config.sh || exit 1
 set -o pipefail
 set -x
 
-control_bam=/home/pcawg/data/bams/control.bam
-tumor_bam=/home/pcawg/data/bams/tumor.bam
+control_bam=$1
+tumor_bam=$2
 
 [[ ! -f $control_bam ]] || [[ ! -f $tumor_bam ]] && echo "Control of tumor bam file not found." && exit 2
 
@@ -268,4 +268,5 @@ READ_EDITS_TUMOR=`perl -e 'use strict; use warnings; open(IN, "<$ARGV[0]"); my $
 MEDIAN_MEAN_TUMOR=`cat ${FILENAME_READBINS_COVERAGE}_TUMOR | perl -F"\t" -ae 'print join("\t", $F[0],$F[1],$F[1]+999,$F[2])' | intersectBed -a stdin -b ${MEDIAN_MEAN_TARGET_FILE} | Rscript ${TOOL_MEDIAN_MEAN}`
 
 # Combine
-echo -e "Callable bases\t${CALLABLE_BASES}\nReads mapping on different chromosomes control\t${DIFFCHROM_VALUE_CONTROL}\nReads mapping on different chromosomes tumor\t${DIFFCHROM_VALUE_TUMOR}\nCoverage control\t${COVERAGE_CONTROL}\nCoverage tumor\t${COVERAGE_TUMOR}\nFWHM control\t${FWHM_CONTROL}\nFWHM tumor\t${FWHM_TUMOR}\nMedian over Mean control\t${MEDIAN_MEAN_CONTROL}\nMedian over Mean tumor\t${MEDIAN_MEAN_TUMOR}\nRead edits control\t${READ_EDITS_CONTROL}\nRead edits tumor\t${READ_EDITS_TUMOR}" > /home/pcawg/data/results/QC_results.tsv
+mkdir -p $HOME/results
+echo -e "Callable bases\t${CALLABLE_BASES}\nReads mapping on different chromosomes control\t${DIFFCHROM_VALUE_CONTROL}\nReads mapping on different chromosomes tumor\t${DIFFCHROM_VALUE_TUMOR}\nCoverage control\t${COVERAGE_CONTROL}\nCoverage tumor\t${COVERAGE_TUMOR}\nFWHM control\t${FWHM_CONTROL}\nFWHM tumor\t${FWHM_TUMOR}\nMedian over Mean control\t${MEDIAN_MEAN_CONTROL}\nMedian over Mean tumor\t${MEDIAN_MEAN_TUMOR}\nRead edits control\t${READ_EDITS_CONTROL}\nRead edits tumor\t${READ_EDITS_TUMOR}" > $HOME/results/QC_results.tsv
