@@ -8,10 +8,12 @@ cwlVersion: v1.0
 dct:creator:
   foaf:name: Ivo Buchhalter
   foaf:mbox: "mailto:i.buchhalter@dkfz-heidelberg.de"
+description: |
+    A Docker container for PanCanQC.
 
 requirements:
   - class: DockerRequirement
-    dockerPull: "quay.io/jwerner_dkfz/pancanqc:1.2"
+    dockerPull: "quay.io/jwerner_dkfz/pancanqc:1.2.2"
   - class: InlineJavascriptRequirement
   - class: InitialWorkDirRequirement
     listing:
