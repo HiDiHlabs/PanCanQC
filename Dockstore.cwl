@@ -4,17 +4,6 @@ class: CommandLineTool
 id: "PanCanQC"
 label: "PanCanQC"
 cwlVersion: v1.0
-description: |
-    A Docker container for the DKFZ Bias Filter.
-    ```
-    Usage:
-    # fetch CWL
-    dockstore tool cwl --entry quay.io/jwerner_dkfz/pancanqc:1.2 > Dockstore.cwl
-    # make a runtime JSON template and edit it
-    dockstore tool convert cwl2json --cwl Dockstore.cwl > Dockstore.json
-    # run it locally with the Dockstore CLI
-    dockstore tool launch --entry quay.io/jwerner_dkfz/pancanqc:1.2 --json Dockstore.json
-    ```
 
 dct:creator:
   foaf:name: Ivo Buchhalter
